@@ -34,19 +34,21 @@ RUN curl -L -o ds.tar.gz https://downloads.dockerslim.com/releases/1.37.3/dist_l
 
 FROM alpine
 LABEL org.opencontainers.image.title="Dockerfile Diff" \
-    org.opencontainers.image.description="Compare the Dockerfile of 2 images and find their differences." \
-    org.opencontainers.image.vendor="Felipe" \
+    org.opencontainers.image.description="Diff local or remotes images so you can more easily see the differences in their Dockerfiles." \
+    org.opencontainers.image.vendor="Felipe Cruz" \
+    com.docker.desktop.extension.icon="https://raw.githubusercontent.com/felipecruz91/dockerfile-diff-extension/main/icon-blue.svg" \
     com.docker.desktop.extension.api.version="0.3.3" \
-    com.docker.extension.screenshots="" \
-    com.docker.extension.detailed-description="" \
-    com.docker.extension.publisher-url="" \
-    com.docker.extension.additional-urls="" \
-    com.docker.extension.changelog=""
+    com.docker.extension.screenshots='[{"alt":"screenshot", "url":"https://raw.githubusercontent.com/felipecruz91/dockerfile-diff-extension/main/docs/images/screenshot.png"}]' \
+    com.docker.extension.detailed-description="When working with Docker, you may have local images that you have built and remote images that are available in a Docker registry such as Docker Hub. The Dockerfile is a set of instructions that defines how to build a Docker image. To compare the differences between the Dockerfiles of two images, you can use this extension to compare the Dockerfiles side by side, making it easier for you to identify what changes have been made." \
+    com.docker.extension.publisher-url="https://github.com/felipecruz91" \
+    com.docker.extension.additional-urls='[{"title":"GitHub repository","url":"https://github.com/felipecruz91/dockerfile-diff-extension"}, {"title":"Report an issue","url":"https://github.com/felipecruz91/dockerfile-diff-extension/issues"}]' \
+    com.docker.extension.changelog="" \
+    com.docker.extension.categories="utility-tools"
 
 COPY --from=builder /backend/bin/service /
 COPY docker-compose.yaml .
 COPY metadata.json .
-COPY docker.svg .
+COPY icon-blue.svg .
 COPY --from=client-builder /ui/build ui
 COPY --from=docker-slim /usr/local/bin/docker-slim /usr/local/bin/docker-slim
 COPY --from=docker-slim /usr/local/bin/docker-slim-sensor /usr/local/bin/docker-slim-sensor
