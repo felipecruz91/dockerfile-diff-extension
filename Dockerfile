@@ -12,13 +12,11 @@ RUN --mount=type=cache,target=/go/pkg/mod \
 
 FROM --platform=$BUILDPLATFORM node:18.12-alpine3.16 AS client-builder
 WORKDIR /ui
-# cache packages in layer
 COPY ui/package.json /ui/package.json
 COPY ui/package-lock.json /ui/package-lock.json
 RUN --mount=type=cache,target=/usr/src/app/.npm \
     npm set cache /usr/src/app/.npm && \
     npm ci
-# install
 COPY ui /ui
 RUN npm run build
 
@@ -26,13 +24,14 @@ FROM alpine AS curl
 RUN apk add --no-cache \
     curl
 
-FROM curl AS docker-slim
-RUN curl -L -o ds.tar.gz https://downloads.dockerslim.com/releases/1.37.3/dist_linux.tar.gz && \
+FROM curl AS slim
+ENV SLIM_VERSION=1.40.0
+RUN curl -L -o ds.tar.gz https://downloads.dockerslim.com/releases/${SLIM_VERSION}/dist_linux.tar.gz && \
     tar -xvf ds.tar.gz && \
-    mv  dist_linux/docker-slim /usr/local/bin/ && \
-    mv  dist_linux/docker-slim-sensor /usr/local/bin/
+    mv  dist_linux/slim /usr/local/bin/ && \
+    mv  dist_linux/slim-sensor /usr/local/bin/
 
-FROM alpine
+FROM alpine:3.17
 LABEL org.opencontainers.image.title="Dockerfile Diff" \
     org.opencontainers.image.description="Diff local or remotes images so you can more easily see the differences in their Dockerfiles." \
     org.opencontainers.image.vendor="Felipe Cruz" \
@@ -50,7 +49,7 @@ COPY docker-compose.yaml .
 COPY metadata.json .
 COPY icon-blue.svg .
 COPY --from=client-builder /ui/build ui
-COPY --from=docker-slim /usr/local/bin/docker-slim /usr/local/bin/docker-slim
-COPY --from=docker-slim /usr/local/bin/docker-slim-sensor /usr/local/bin/docker-slim-sensor
+COPY --from=slim /usr/local/bin/slim /usr/local/bin/slim
+COPY --from=slim /usr/local/bin/slim-sensor /usr/local/bin/slim-sensor
 
 CMD /service -socket /run/guest-services/backend.sock

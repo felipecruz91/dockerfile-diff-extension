@@ -2,10 +2,10 @@
 
 ![screenshot](docs/images/screenshot.png)
 
-Install the extension from this link https://open.docker.com/extensions/marketplace?extensionId=felipecruz/dockerfile-diff-extension&tag=0.0.4 or from the CLI:
+Install the extension from this link https://open.docker.com/extensions/marketplace?extensionId=felipecruz/dockerfile-diff-extension&tag=0.0.5 or from the CLI:
 
 ```shell
-docker extension install felipecruz/dockerfile-diff-extension:0.0.4
+docker extension install felipecruz/dockerfile-diff-extension:0.0.5
 ```
 
 ---
